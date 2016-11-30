@@ -9,9 +9,17 @@ class ChatBar extends Component {
     this.state = {
       message: ''
     };
-
+    // this.messageId = this.messageId.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
+
+  //function for creating new message id??
+  // messageId (id) {
+  //   if (id) {
+  //     id = id + 1
+  //   }
+  //   return id;
+  // }
 
   sendMessage (event) {
     if(event.keyCode == 13){

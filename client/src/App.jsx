@@ -27,14 +27,16 @@ class App extends Component {
         }]
       }
     }
-
     this.submit = this.submit.bind(this);
   }
+
+
 
   //function to receive message from chatbar
   submit(username, message) {
     console.log("here:", this.state.data);
     const submitData = {
+      // id: id,
       username: username,
       content: message
     };
@@ -48,6 +50,12 @@ class App extends Component {
 
   componentDidMount() {
     console.log("componentDidMount <App />");
+
+    const socket = new WebSocket("ws://localhost:4000/socketserver");
+     socket.onopen = function(event) {
+       socket.send("Connected");
+     };
+
     setTimeout(() => {
       console.log("Simulating incoming message");
       // Add a new message to the list of messages in the data store
@@ -62,6 +70,7 @@ class App extends Component {
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({data: {messages: messages}})
     }, 3000);
+
 }
 
   render() {

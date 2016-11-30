@@ -9,7 +9,8 @@ class MessageList extends Component {
       return (
         <div id="message-list">
         {this.props.data.messages.map((messageInfo) => (
-          <Message key = {
+          <Message
+            key = {
             messageInfo.id
           }
           username = {
@@ -25,5 +26,3 @@ class MessageList extends Component {
   }
 
 export default MessageList;
-
-
