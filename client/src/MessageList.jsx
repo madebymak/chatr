@@ -1,25 +1,30 @@
-// <div class="message system">
-//       Anonymous1 changed their name to nomnom.
-//     </div>
-
 
 import React, {Component} from 'react';
+import Message from './message.jsx'
+
 
 class MessageList extends Component {
 
-
   render() {
-    return (
-      <div id="message-list">
-        <div className="message">
-          <span className="username">Anonymous1</span>
-          <span className="content">I won't be impressed with technology until I can download food.</span>
+    const rows = [];
+    this.props.data.messages.forEach((data) => {
+      rows.push( <Message key = {
+        data.id
+      }
+      username = {
+        data.username
+      }
+      content = {
+        data.content
+      }/>)
+    });
+
+      return (
+        <div id="message-list">
+        {rows}
         </div>
-        <div className="message system">
-          Anonymous1 changed their name to nomnom.
-        </div>
-      </div>
-    );
+      );
+    }
   }
-}
+
 export default MessageList;
