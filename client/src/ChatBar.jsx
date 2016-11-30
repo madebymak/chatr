@@ -2,6 +2,13 @@
 import React, {Component} from 'react';
 
 class ChatBar extends Component {
+
+  //function event handler
+
+  function (event) {
+    // body...
+  }
+
   render() {
     var currentUser = this.props.data.currentUser.name;
     return (
