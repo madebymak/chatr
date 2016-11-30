@@ -28,8 +28,23 @@ class App extends Component {
       }
     }
 
-    //function
+    this.submit = this.submit.bind(this);
   }
+
+  //function to receive message from chatbar
+  submit(username, message) {
+    console.log("here:", this.state.data);
+    const submitData = {
+      username: username,
+      content: message
+    };
+    const msg = this.state.data.messages.concat(submitData)
+    this.setState({
+      data: {
+        messages: msg
+      }
+    })
+   }
 
   componentDidMount() {
     console.log("componentDidMount <App />");
@@ -42,13 +57,12 @@ class App extends Component {
         content: "Hello there!"
       };
       const messages = this.state.data.messages.concat(newMessage)
-      console.log(messages[2]);
+      // console.log(messages[2]);
       // Update the state of the app component.
       // Calling setState will trigger a call to render() in App and all child components.
       this.setState({data: {messages: messages}})
     }, 3000);
 }
-
 
   render() {
     return (
@@ -64,12 +78,12 @@ class App extends Component {
 
         <ChatBar data = {
           this.state.data
+        } submit = {
+          this.submit
         } />
-
       </div>
     );
   }
 }
-
 
 export default App;
