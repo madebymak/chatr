@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ChatBar from "./ChatBar.jsx";
 // import Message from "./Message.jsx";
 import MessageList from "./MessageList.jsx";
+// const socket = new WebSocket("ws://localhost:4000/socketserver");
 
 // var data =
 
@@ -30,17 +31,20 @@ class App extends Component {
     this.submit = this.submit.bind(this);
   }
 
-
-
   //function to receive message from chatbar
   submit(username, message) {
-    console.log("here:", this.state.data);
+    // console.log("here:", this.state.data);
+    let lastMessageId = this.state.data.messages[this.state.data.messages.length - 1].id
+    let newMessageId= lastMessageId + 1;
+    // console.log(newMessageId);
     const submitData = {
-      // id: id,
+      id: newMessageId,
       username: username,
       content: message
     };
+    // socket.send(JSON.stringify(submitData));
     const msg = this.state.data.messages.concat(submitData)
+    console.log("msg:", msg);
     this.setState({
       data: {
         messages: msg
@@ -49,12 +53,12 @@ class App extends Component {
    }
 
   componentDidMount() {
-    console.log("componentDidMount <App />");
-
-    const socket = new WebSocket("ws://localhost:4000/socketserver");
-     socket.onopen = function(event) {
-       socket.send("Connected");
-     };
+    // const socket = new WebSocket("ws://localhost:4000/socketserver");
+    //  socket.onopen = function(event) {
+    //    console.log("Connected");
+    //    console.log("event data:", event.data);
+    //   //  const message = JSON.parse(event.data);
+    //  };
 
     setTimeout(() => {
       console.log("Simulating incoming message");

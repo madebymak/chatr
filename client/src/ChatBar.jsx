@@ -9,7 +9,6 @@ class ChatBar extends Component {
     this.state = {
       message: ''
     };
-    // this.messageId = this.messageId.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
