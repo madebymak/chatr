@@ -15,8 +15,7 @@ class App extends Component {
         currentUser: {
           name: "Bob"
         },
-
-        messages: []
+        messages: [],
         // messages: [ {
         //   id: 1,
         //   username: "Bob",
@@ -28,21 +27,24 @@ class App extends Component {
         //   content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
         // }]
       }
+
     }
     this.submit = this.submit.bind(this);
   }
 
   //function to receive message from chatbar
-  submit(username, message) {
+  submit(username, content) {
     // console.log("here:", this.state.data);
-    let lastMessageId = this.state.data.messages[this.state.data.messages.length - 1].id
-    let newMessageId= lastMessageId + 1;
+    // let lastMessageId = this.state.data.messages[this.state.data.messages.length - 1].id
+    // let newMessageId= lastMessageId + 1;
     // console.log(newMessageId);
     const submitData = {
-      id: newMessageId,
+      // id: newMessageId,
+      id: 4,
       username: username,
-      content: message
+      content: content
     };
+    // console.log("msg:", this.state.data.messages);
     const msg = this.state.data.messages.concat(submitData)
     socket.send(JSON.stringify(submitData));
 
@@ -55,37 +57,39 @@ class App extends Component {
    }
 
   componentDidMount() {
-    this.socket = socket;
-     this.socket.onopen = function(event) {
+    // this.socket = socket;
+     socket.onopen = (event) => {
        console.log("Connected");
-       console.log("event data:",event.data);
-       this.socket.onmessage = function(event) {
-         console.log("json:", JSON.parse.data);
+       socket.onmessage = (event) => {
+         console.log("json:", event.data); //just id right now?
          let updateMessage = JSON.parse(event.data);
+         console.log("mounted:", this.state.data.messages);
          const newMessages = this.state.data.messages.concat(updateMessage)
-
+         console.log("newmessage:", newMessages);
          this.setState({
-           messages: newMessages
+           data: {
+             messages: newMessages
+           }
          })
        }
       //  console.log("event data:", event.data);
       //  const message = JSON.parse(event.data);
      }
 
-    setTimeout(() => {
-      console.log("Simulating incoming message");
-      // Add a new message to the list of messages in the data store
-      const newMessage = {
-        id: 3,
-        username: "Michelle",
-        content: "Hello there!"
-      };
-      const messages = this.state.data.messages.concat(newMessage)
-      // console.log(messages[2]);
-      // Update the state of the app component.
-      // Calling setState will trigger a call to render() in App and all child components.
-      this.setState({data: {messages: messages}})
-    }, 3000);
+    // setTimeout(() => {
+    //   console.log("Simulating incoming message");
+    //   // Add a new message to the list of messages in the data store
+    //   const newMessage = {
+    //     id: 3,
+    //     username: "Michelle",
+    //     content: "Hello there!"
+    //   };
+    //   const messages = this.state.data.messages.concat(newMessage)
+    //   // console.log(messages[2]);
+    //   // Update the state of the app component.
+    //   // Calling setState will trigger a call to render() in App and all child components.
+    //   this.setState({data: {messages: messages}})
+    // }, 3000);
 
   }
 
