@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ChatBar from "./ChatBar.jsx";
 // import Message from "./Message.jsx";
 import MessageList from "./MessageList.jsx";
-// const socket = new WebSocket("ws://localhost:4000/socketserver");
+const socket = new WebSocket("ws://localhost:4000/socketserver");
 
 // var data =
 
@@ -16,16 +16,17 @@ class App extends Component {
           name: "Bob"
         },
 
-        messages: [ {
-          id: 1,
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          id: 2,
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }]
+        messages: []
+        // messages: [ {
+        //   id: 1,
+        //   username: "Bob",
+        //   content: "Has anyone seen my marbles?",
+        // },
+        // {
+        //   id: 2,
+        //   username: "Anonymous",
+        //   content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
+        // }]
       }
     }
     this.submit = this.submit.bind(this);
@@ -42,23 +43,34 @@ class App extends Component {
       username: username,
       content: message
     };
-    // socket.send(JSON.stringify(submitData));
     const msg = this.state.data.messages.concat(submitData)
-    console.log("msg:", msg);
-    this.setState({
-      data: {
-        messages: msg
-      }
-    })
+    socket.send(JSON.stringify(submitData));
+
+    // console.log("msg:", msg);
+    // this.setState({
+    //   data: {
+    //     messages: msg
+    //   }
+    // })
    }
 
   componentDidMount() {
-    // const socket = new WebSocket("ws://localhost:4000/socketserver");
-    //  socket.onopen = function(event) {
-    //    console.log("Connected");
-    //    console.log("event data:", event.data);
-    //   //  const message = JSON.parse(event.data);
-    //  };
+    this.socket = socket;
+     this.socket.onopen = function(event) {
+       console.log("Connected");
+       console.log("event data:",event.data);
+       this.socket.onmessage = function(event) {
+         console.log("json:", JSON.parse.data);
+         let updateMessage = JSON.parse(event.data);
+         const newMessages = this.state.data.messages.concat(updateMessage)
+
+         this.setState({
+           messages: newMessages
+         })
+       }
+      //  console.log("event data:", event.data);
+      //  const message = JSON.parse(event.data);
+     }
 
     setTimeout(() => {
       console.log("Simulating incoming message");
@@ -75,7 +87,7 @@ class App extends Component {
       this.setState({data: {messages: messages}})
     }, 3000);
 
-}
+  }
 
   render() {
     return (
