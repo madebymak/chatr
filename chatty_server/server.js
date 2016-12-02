@@ -30,11 +30,14 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', function (event) {
     let parseMessage = JSON.parse(event);
+    console.log("event:", parseMessage);
+    let msg = "incomingMessage";
     let newParsed = {
+      type: msg,
       id: uuidV4(),
       username: parseMessage.username,
       content: parseMessage.content
-    }
+    };
     console.log("parsed:", newParsed);
     // console.log("ID:", uuidV4());
     // console.log('User:', parseMessage.username)
