@@ -7,18 +7,15 @@ class ChatBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      message: ''
+      messages: " "
     };
+    this.sendNotify = this.sendNotify.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
-  //function for creating new message id??
-  // messageId (id) {
-  //   if (id) {
-  //     id = id + 1
-  //   }
-  //   return id;
-  // }
+  sendNotify (event) {
+    //post nofitication
+  }
 
   sendMessage (event) {
     if(event.keyCode == 13){
@@ -32,8 +29,8 @@ class ChatBar extends Component {
   render() {
     return (
       <footer>
-        <input id="username" type="text" placeholder="username" ref='username' />
-        <input id="new-message" type="text" placeholder="Type a message and hit ENTER" onKeyDown={this.sendMessage} ref='newMessage' />
+          <input id="username" type="text" placeholder="username" ref='username' onKeyDown={this.sendMessage}/>
+          <input id="new-message" type="text" placeholder="Type a message and hit ENTER" onKeyDown={this.sendMessage} ref='newMessage' />
       </footer>
     );
   }

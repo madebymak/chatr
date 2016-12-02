@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       data: {
         currentUser: {
-          name: "Bob"
+          name: "Anonymous"
         },
         messages: [],
         // messages: [ {
@@ -38,13 +38,24 @@ class App extends Component {
     // let lastMessageId = this.state.data.messages[this.state.data.messages.length - 1].id
     // let newMessageId= lastMessageId + 1;
     // console.log(newMessageId);
+
     const submitData = {
-      // id: newMessageId,
-      id: 4,
-      username: username,
-      content: content
+          type: "postMessage",
+          id: 1, //get overwritten by UUID
+          username: username,
+          content: content
     };
-    // console.log("msg:", this.state.data.messages);
+
+    const newCurrentUser = {
+      data: {
+        currentUser: {
+          name: username
+        },
+        messages: submitData
+      }
+    }
+    console.log("new user:", newCurrentUser);
+    console.log("msg:", submitData);
     const msg = this.state.data.messages.concat(submitData)
     socket.send(JSON.stringify(submitData));
 
@@ -60,8 +71,24 @@ class App extends Component {
     // this.socket = socket;
      socket.onopen = (event) => {
        console.log("Connected");
+
        socket.onmessage = (event) => {
-         console.log("json:", event.data); //just id right now?
+
+        //  const data = JSON.parse(event.data);
+        //   switch(data.type) {
+        //     case "incomingMessage":
+        //       console.log("message");
+        //       break;
+        //     case "incomingNotification":
+        //       console.log("nofitication");
+        //       break;
+        //     default:
+        //       // show an error in the console if the message type is unknown
+        //       throw new Error("Unknown event type " + data.type);
+        //   }
+
+
+         console.log("json:", event.data);
          let updateMessage = JSON.parse(event.data);
          console.log("mounted:", this.state.data.messages);
          const newMessages = this.state.data.messages.concat(updateMessage)
