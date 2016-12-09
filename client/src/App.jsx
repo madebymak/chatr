@@ -16,6 +16,7 @@ class App extends Component {
           name: "Anonymous"
         },
         messages: [],
+        counter: 0
         // messages: [ {
         //   id: 1,
         //   username: "Bob",
@@ -125,6 +126,7 @@ class App extends Component {
       <div>
         <nav>
           <h1>Chatty</h1>
+          Users online: {this.state.data.counter}
         </nav>
 
         <MessageList data = {
