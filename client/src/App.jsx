@@ -4,17 +4,13 @@ import ChatBar from "./ChatBar.jsx";
 import MessageList from "./MessageList.jsx";
 const socket = new WebSocket("ws://localhost:4000/socketserver");
 
-// var data =
-
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       data: {
-        currentUser: {
-          name: "Anonymous"
-        },
+        currentUser: "Anonymous",
         messages: [],
         counter: 0
         // messages: [ {
@@ -31,41 +27,61 @@ class App extends Component {
 
     }
     this.submit = this.submit.bind(this);
+    // this.usernameData = this.usernameData.bind(this);
   }
+
+  // usernameData(username) {
+  //   let submitNotification;
+  //   console.log("user:", username);
+  //   console.log("currentUser:", this.state.data.currentUser);
+  //   if (username !== this.state.data.currentUser) {
+  //      submitNotification = {
+  //        data: {
+  //          currentUser: username,
+  //          messages: {
+  //            type: "postNotification",
+  //            id: 1,
+  //            username: username,
+  //            content: this.state.data.currentUser + " changed name to " + username
+  //          }
+  //        }
+  //     }
+  //     socket.send(JSON.stringify(submitNotification));
+  //   }
+
 
   //function to receive message from chatbar
   submit(username, content) {
-    // console.log("here:", this.state.data);
-    // let lastMessageId = this.state.data.messages[this.state.data.messages.length - 1].id
-    // let newMessageId= lastMessageId + 1;
-    // console.log(newMessageId);
+    let submitData;
 
-    const submitData = {
-          type: "postMessage",
-          id: 1, //get overwritten by UUID
-          username: username,
-          content: content
-    };
-
-    const newCurrentUser = {
+    if (username !== this.state.data.currentUser) {
+      submitData = {
       data: {
-        currentUser: {
-          name: username
-        },
-        messages: submitData
-      }
-    }
-    console.log("new user:", newCurrentUser);
-    console.log("msg:", submitData);
-    const msg = this.state.data.messages.concat(submitData)
-    socket.send(JSON.stringify(submitData));
+        currentUser: username,
+        messages: {
+          type: "postNotification",
+          id: 1,
+          username: username,
+          content: this.state.data.currentUser + " changed name to " + username
+         }
+       }
+     }
+      //  socket.send(JSON.stringify(submitData));
+   }
 
-    // console.log("msg:", msg);
-    // this.setState({
-    //   data: {
-    //     messages: msg
-    //   }
-    // })
+   if (username === this.state.data.currentUser) {
+      submitData = {
+       data: {
+         messages: {
+               type: "postMessage",
+               id: 1, //get overwritten by UUID
+               username: username,
+               content: content
+         },
+       }
+     }
+   }
+    socket.send(JSON.stringify(submitData));
    }
 
   componentDidMount() {
@@ -74,31 +90,41 @@ class App extends Component {
        console.log("Connected");
 
        socket.onmessage = (event) => {
-
-        //  const data = JSON.parse(event.data);
-        //   switch(data.type) {
-        //     case "incomingMessage":
-        //       console.log("message");
-        //       break;
-        //     case "incomingNotification":
-        //       console.log("nofitication");
-        //       break;
-        //     default:
-        //       // show an error in the console if the message type is unknown
-        //       throw new Error("Unknown event type " + data.type);
-        //   }
-
-
-         console.log("json:", event.data);
-         let updateMessage = JSON.parse(event.data);
-         console.log("mounted:", this.state.data.messages);
-         const newMessages = this.state.data.messages.concat(updateMessage)
-         console.log("newmessage:", newMessages);
-         this.setState({
-           data: {
-             messages: newMessages
-           }
-         })
+         console.log("message event:", event.data);
+         const data = JSON.parse(event.data);
+          switch(data.type) {
+            case "incomingMessage":
+              // const newMessages = this.state.data.messages.concat(updateMessage)
+              console.log("newmessage:", data.content);
+              this.setState({
+                data: {
+                  currentUser: data.username,
+                  messages: this.state.data.messages.concat({
+                    username: data.username,
+                    content: data.content
+                })
+              }
+            })
+              break;
+            case "incomingNotification":
+              console.log("nofitication!!!");
+              console.log("incomingNotification:", data.content);
+              // const newMessages = this.state.data.messages.concat(data.content);
+              this.setState({
+                data: {
+                  currentUser: data.username,
+                  messages: this.state.data.messages.concat({
+                    username: "NOTIFICATION:",
+                    content: "*** " + data.content + "***"
+                })
+              }
+            })
+              // console.log("newmessage:", newMessages);
+              break;
+            default:
+              // show an error in the console if the message type is unknown
+              throw new Error("Unknown event type " + data.type);
+          }
        }
       //  console.log("event data:", event.data);
       //  const message = JSON.parse(event.data);
@@ -129,7 +155,7 @@ class App extends Component {
           Users online: {this.state.data.counter}
         </nav>
 
-        <MessageList data = {
+        <MessageList messageList = {
           this.state.data
         }
         />
