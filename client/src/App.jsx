@@ -121,6 +121,16 @@ class App extends Component {
             })
               // console.log("newmessage:", newMessages);
               break;
+
+              case 'counter':
+              console.log("count received:", data);
+              this.setState({
+                data: {
+                  counter: data.counter
+                }
+              })
+              break;
+
             default:
               // show an error in the console if the message type is unknown
               throw new Error("Unknown event type " + data.type);

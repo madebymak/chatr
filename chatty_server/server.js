@@ -15,35 +15,38 @@ const server = express()
 
 // Create the WebSockets server
 const wss = new SocketServer({ server });
-let count = 0;
+let userCount = 0;
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 
 wss.broadcast = function broadcast(data) {
+  console.log("broadcast:", data);
   wss.clients.forEach(function each(client) {
-    client.send(data);
+    // console.log("client:", client);
+    client.send(JSON.stringify(data));
   });
 };
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
-  count++;
-  console.log("users:", count);
+  userCount++;
+  console.log("users:", userCount);
 
-  // wss.broadcast({
-  //   data: {
-  //     counter: count
-  //   }
-  // })
+
+// *** PROBLEM HERE, RUNNING ON THE SAME PORT ERROR ***
+  wss.broadcast({
+      type: "counter",
+      counter: userCount
+  })
 
   ws.on('message', function (event) {
     let parseMessage = JSON.parse(event);
     console.log("event:", parseMessage);
     // console.log("type:", parseMessage.data.messages.type);
     let newParsed;
-    
+
     if (parseMessage.data.messages.type === "postNotification") {
       newParsed = {
           type: "incomingNotification",
@@ -77,7 +80,7 @@ wss.on('connection', (ws) => {
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
     console.log('Client disconnected');
-    count--;
-    console.log("users:", count);
+    userCount--;
+    console.log("users:", userCount);
   });
 })
