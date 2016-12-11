@@ -22,7 +22,6 @@ let count = 0;
 // the ws parameter in the callback.
 
 wss.broadcast = function broadcast(data) {
-  console.log("broadcast:",data);
   wss.clients.forEach(function each(client) {
     client.send(data);
   });
@@ -42,14 +41,29 @@ wss.on('connection', (ws) => {
   ws.on('message', function (event) {
     let parseMessage = JSON.parse(event);
     console.log("event:", parseMessage);
-    let msg = "incomingMessage";
-    let newParsed = {
-      type: msg,
-      id: uuidV4(),
-      username: parseMessage.username,
-      content: parseMessage.content
-    };
+    // console.log("type:", parseMessage.data.messages.type);
+    let newParsed;
+    
+    if (parseMessage.data.messages.type === "postNotification") {
+      newParsed = {
+          type: "incomingNotification",
+          id: uuidV4(),
+          username: parseMessage.data.messages.username,
+          content: parseMessage.data.messages.content,
+      }
+    }
+
+    if (parseMessage.data.messages.type === "postMessage"){
+      newParsed = {
+       type: "incomingMessage",
+       id: uuidV4(),
+       username: parseMessage.data.messages.username,
+       content: parseMessage.data.messages.content
+     };
+
+    }
     console.log("parsed:", newParsed);
+
     // console.log("ID:", uuidV4());
     // console.log('User:', parseMessage.username)
     // console.log('Message:', parseMessage.content) //JSON parse
