@@ -92,8 +92,8 @@ class App extends Component {
        socket.onmessage = (event) => {
          console.log("message event:", event.data);
          const data = JSON.parse(event.data);
-          switch(data.type) {
-            case "incomingMessage":
+         switch(data.type) {
+           case "incomingMessage":
               // const newMessages = this.state.data.messages.concat(updateMessage)
               console.log("newmessage:", data.content);
               this.setState({
@@ -102,7 +102,8 @@ class App extends Component {
                   messages: this.state.data.messages.concat({
                     username: data.username,
                     content: data.content
-                })
+                }),
+                counter: this.state.data.counter
               }
             })
               break;
@@ -116,7 +117,8 @@ class App extends Component {
                   messages: this.state.data.messages.concat({
                     username: "NOTIFICATION:",
                     content: "*** " + data.content + "***"
-                })
+                }),
+                counter: this.state.data.counter
               }
             })
               // console.log("newmessage:", newMessages);
@@ -126,6 +128,9 @@ class App extends Component {
               console.log("count received:", data);
               this.setState({
                 data: {
+                  currentUser: this.state.data.currentUser,
+                  messages: this.state.data.messages.concat({
+                  }),
                   counter: data.counter
                 }
               })
