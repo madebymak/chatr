@@ -32,9 +32,7 @@ class App extends Component {
           }
         }
       }
-    }
-
-    if (username === this.state.data.currentUser) {
+    } else if (username === this.state.data.currentUser) {
       submitData = {
         data: {
           messages: {

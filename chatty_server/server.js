@@ -27,9 +27,7 @@ wss.on('connection', (ws) => {
         username: parseMessage.data.messages.username,
         content: parseMessage.data.messages.content
       }
-    }
-
-    if (parseMessage.data.messages.type === "postMessage") {
+    } else if (parseMessage.data.messages.type === "postMessage") {
       newParsed = {
         type: "incomingMessage",
         id: uuidV4(),
